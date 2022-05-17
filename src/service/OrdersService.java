@@ -1,8 +1,6 @@
 package service;
 
-import model.LocalOrder;
-import model.MenuItem;
-import model.Order;
+import model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,9 +23,14 @@ public final class OrdersService implements IOrdersService {
 
     @Override
     public void addOrder() {
-        LocalOrder newOrder = new LocalOrder(getInt("Enter table number"));
+        Order newOrder;
+        if (getBoolean("Is the order online?")) {
+            newOrder = new OnlineOrder(new Address(getString("Enter street name"), getString("Enter street number"), getString("Enter flat number if applicable"), getString("Enter postal code"), getString("Enter city")));
+        } else {
+            newOrder = new LocalOrder(getInt("Enter table number"));
+        }
         boolean loop = true;
-        while(loop) {
+        while (loop) {
             getRestaurantMenu().display();
             MenuItem menuItem = getMenu().getCurrentMenu().get(getInt("Enter item number"));
             while (!menuItem.isAvailable())
@@ -66,7 +69,7 @@ public final class OrdersService implements IOrdersService {
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
         BigDecimal turnover =
                 getOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date))
-                .filter(Order::isCompleted).map(Order::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        .filter(Order::isCompleted).map(Order::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
         System.out.println("Turnover for " + date + " was " + turnover);
     }
 }

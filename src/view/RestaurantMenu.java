@@ -21,9 +21,10 @@ public final class RestaurantMenu extends TerminalEntry {
         restaurantMenu.setActions(new ArrayList<>());
         for (MenuItem menuItem : getMenu().getCurrentMenu()) {
             if(!menuItem.isAvailable())
-            restaurantMenu.addAction("POSITION NOT AVAILABLE - " + (menuItem.getName() + "\t" + menuItem.getDescription() + "\t" + menuItem.getPrice() + "zł"));
-            else restaurantMenu.addAction((menuItem.getName() + "\t" + menuItem.getDescription() + "\t" + menuItem.getPrice() + "zł"));
+            restaurantMenu.addAction("POSITION NOT AVAILABLE - " + (menuItem.getName() + "\t\t\t" + menuItem.getDescription() + "\t\t\t" + menuItem.getPrice() + "zł"));
+            else restaurantMenu.addAction((menuItem.getName() + "\t\t\t" + menuItem.getDescription() + "\t\t\t" + menuItem.getPrice() + "zł"));
         }
+        //https://stackoverflow.com/questions/15215326/how-can-i-create-table-using-ascii-in-a-console
         return restaurantMenu;
     }
 

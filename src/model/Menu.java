@@ -9,6 +9,8 @@ public final class Menu {
     public static Menu getMenu() {
         if (menu == null) {
             menu = new Menu();
+        }
+        if(currentMenu == null) {
             currentMenu = new ArrayList<>();
         }
         return menu;

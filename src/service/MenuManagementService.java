@@ -63,21 +63,19 @@ public final class MenuManagementService implements IMenuManagementService {
             FileOutputStream fileOutputStream = new FileOutputStream("./output/" + getString("Enter file name") + ".csv");
 
             fileOutputStream.write("Product".getBytes(StandardCharsets.UTF_8));
-            fileOutputStream.write(44);
+            fileOutputStream.write(59);
             fileOutputStream.write("Description".getBytes(StandardCharsets.UTF_8));
-            fileOutputStream.write(44);
+            fileOutputStream.write(59);
             fileOutputStream.write("Price".getBytes(StandardCharsets.UTF_8));
-            fileOutputStream.write(44);
             fileOutputStream.write(System.getProperty("line.separator").getBytes(StandardCharsets.UTF_8));
 
 
             for (MenuItem menuItem : getMenu().getCurrentMenu()) {
                 fileOutputStream.write(menuItem.getName().getBytes(StandardCharsets.UTF_8));
-                fileOutputStream.write(44);
+                fileOutputStream.write(59);
                 fileOutputStream.write(menuItem.getDescription().getBytes(StandardCharsets.UTF_8));
-                fileOutputStream.write(44);
+                fileOutputStream.write(59);
                 fileOutputStream.write(menuItem.getPrice().toPlainString().getBytes(StandardCharsets.UTF_8));
-                fileOutputStream.write(44);
                 fileOutputStream.write(System.getProperty("line.separator").getBytes(StandardCharsets.UTF_8));
 
             }
@@ -92,17 +90,31 @@ public final class MenuManagementService implements IMenuManagementService {
     public void importMenu() {
         try {
             FileReader fr = new FileReader("./input/" + getString("Enter file name") + ".csv");
-            BufferedReader br = new BufferedReader(fr);
-            List<String> data = br.lines().skip(1).flatMap(l -> Arrays.stream(l.split(","))).toList();
-            ArrayList<MenuItem> menu = new ArrayList<>();
-            for (int i = 0; i < data.size(); i += 3) {
-                menu.add(new MenuItem(data.get(i), data.get(i + 1), BigDecimal.valueOf(Double.parseDouble(data.get(i + 2)))));
-            }
-            setCurrentMenu(menu);
-            fr.close();
+            readCsv(fr);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public void importMenu(String fileName) {
+        try {
+            FileReader fr = new FileReader("./input/" + fileName + ".csv");
+            readCsv(fr);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void readCsv(FileReader fr) throws IOException {
+        BufferedReader br = new BufferedReader(fr);
+        List<String> data = br.lines().skip(1).flatMap(l -> Arrays.stream(l.split(";"))).toList();
+        ArrayList<MenuItem> menu = new ArrayList<>();
+        for (int i = 0; i < data.size(); i += 3) {
+            menu.add(new MenuItem(data.get(i), data.get(i + 1), BigDecimal.valueOf(Double.parseDouble(data.get(i + 2)))));
+        }
+        setCurrentMenu(menu);
+        fr.close();
     }
 
     @Override
