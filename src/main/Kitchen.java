@@ -11,6 +11,5 @@ public class Kitchen extends Thread{
     @Override
     public void run() {
         super.run();
-        setWorking(true);
     }
 }

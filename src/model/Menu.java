@@ -27,5 +27,7 @@ public final class Menu {
         currentMenu.remove(number);
     }
 
-
+    public static void setCurrentMenu(ArrayList<MenuItem> currentMenu) {
+        Menu.currentMenu = currentMenu;
+    }
 }

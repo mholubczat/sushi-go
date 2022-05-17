@@ -4,9 +4,14 @@ package service;
 import model.MenuItem;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static model.Menu.getMenu;
+import static model.Menu.setCurrentMenu;
 import static view.InputValidator.*;
 import static view.RestaurantMenu.getRestaurantMenu;
 
@@ -86,12 +91,14 @@ public final class MenuManagementService implements IMenuManagementService {
     @Override
     public void importMenu() {
         try {
-            //FileInputStream fileInputStream = new FileInputStream("./input/" + getString("Enter file name") + ".csv");
             FileReader fr = new FileReader("./input/" + getString("Enter file name") + ".csv");
             BufferedReader br = new BufferedReader(fr);
-            do {System.out.println(br.readLine());}
-            while(!(br.readLine()==null));
-
+            List<String> data = br.lines().skip(1).flatMap(l -> Arrays.stream(l.split(","))).toList();
+            ArrayList<MenuItem> menu = new ArrayList<>();
+            for (int i = 0; i < data.size(); i += 3) {
+                menu.add(new MenuItem(data.get(i), data.get(i + 1), BigDecimal.valueOf(Double.parseDouble(data.get(i + 2)))));
+            }
+            setCurrentMenu(menu);
             fr.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
