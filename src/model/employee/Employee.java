@@ -1,0 +1,37 @@
+package model.employee;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Employee {
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+
+    private static List<Employee> employees;
+
+    public Employee(String firstName, String lastName, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        if(employees==null) employees = new ArrayList<>();
+        employees.add(this);
+        System.out.println("Employee hired");
+    }
+
+    public void fireEmployee(int number){
+        Class<? extends Employee> profession = employees.get(number).getClass();
+
+        employees.remove(number);
+        if(employees.stream().noneMatch(employee -> employee.getClass().equals(profession))) System.out.println("To żeś kurwa narobił");
+    }
+
+    public static List<Employee> getEmployees() {
+        return employees;
+    }
+
+    @Override
+    public String toString() {
+        return employees.indexOf(this) + " - " + getClass().getSimpleName() + " - " + firstName + " " + lastName + " tel. " + phoneNumber;
+    }
+}
