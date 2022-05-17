@@ -1,24 +1,12 @@
 package controller;
 
-import model.LocalOrder;
-import model.Order;
 import service.IOrdersService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-
-import static model.Order.getOrders;
 import static service.OrdersService.getOrdersService;
-import static view.EmployeeManagement.getEmployeeManagement;
 import static view.InputValidator.getInt;
-import static view.MainMenu.getMainMenu;
-import static view.MenuManagement.getMenuManagement;
 import static view.OrdersManagement.getOrdersManagement;
-import static view.RestaurantManagement.getRestaurantManagement;
 
-public final class OrdersController implements TerminalEntryController{
+public final class OrdersController {
     private static OrdersController ordersController;
     private final IOrdersService ordersService;
 
@@ -33,7 +21,6 @@ public final class OrdersController implements TerminalEntryController{
         return ordersController;
     }
 
-    @Override
     public void invokeAction() {
         getOrdersManagement().display();
         switch (getInt("")) {

@@ -1,20 +1,14 @@
 package controller;
 
 
-import model.MenuItem;
 import service.IMenuManagementService;
-import service.MenuManagementService;
 
-import static controller.OrdersController.getOrdersController;
 import static service.MenuManagementService.getMenuManagementService;
-import static view.EmployeeManagement.getEmployeeManagement;
 import static view.InputValidator.getInt;
-import static view.MainMenu.getMainMenu;
 import static view.MenuManagement.getMenuManagement;
 import static view.OrdersManagement.getOrdersManagement;
-import static view.RestaurantManagement.getRestaurantManagement;
 
-public final class MenuManagementController implements TerminalEntryController {
+public final class MenuManagementController {
     private static MenuManagementController menuManagementController;
     private final IMenuManagementService menuManagementService;
 

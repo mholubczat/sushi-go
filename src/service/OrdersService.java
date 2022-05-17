@@ -59,7 +59,7 @@ public final class OrdersService implements IOrdersService {
 
         getOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date))
                 .filter(Order::isCompleted)
-                .forEach(order -> System.out.println(order.toString()));
+                .forEach(order -> System.out.println(order));
 
         System.out.println("No more orders");
     }

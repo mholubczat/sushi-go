@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-
 import static model.Menu.getMenu;
 
 public class LocalOrder extends Order{

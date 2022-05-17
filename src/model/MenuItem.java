@@ -1,7 +1,6 @@
 package model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 public class MenuItem {
     private String name;

@@ -1,21 +1,14 @@
 package controller;
 
 
-import java.util.Scanner;
-
 import static controller.EmployeeManagementController.getEmployeeManagementController;
 import static controller.OrdersController.getOrdersController;
 import static controller.MenuManagementController.getMenuManagementController;
 import static controller.RestaurantManagementController.getRestaurantManagementController;
-import static main.Kitchen.setWorking;
-import static view.EmployeeManagement.getEmployeeManagement;
 import static view.InputValidator.getInt;
 import static view.MainMenu.getMainMenu;
-import static view.MenuManagement.getMenuManagement;
-import static view.OrdersManagement.getOrdersManagement;
-import static view.RestaurantManagement.getRestaurantManagement;
 
-public final class MainMenuController implements TerminalEntryController {
+public final class MainMenuController {
     private static MainMenuController mainMenuController;
 
     public static MainMenuController getMainMenuController() {

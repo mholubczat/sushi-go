@@ -9,9 +9,6 @@ import model.employee.Delivery;
 import model.employee.Waiter;
 import service.MenuManagementService;
 
-import static model.LocalOrder.randomOrder;
-import static model.Menu.getMenu;
-
 public class DataInitializer {
     public static void initialize(){
 

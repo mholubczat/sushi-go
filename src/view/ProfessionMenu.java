@@ -1,12 +1,5 @@
 package view;
 
-import model.MenuItem;
-import model.employee.Cook;
-
-import java.util.ArrayList;
-
-import static model.Menu.getMenu;
-
 public final class ProfessionMenu extends TerminalEntry{
     private static ProfessionMenu professionMenu;
 

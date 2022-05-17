@@ -2,15 +2,12 @@ package controller;
 
 
 import service.IEmployeeManagementService;
-import service.IRestaurantManagementService;
 
 import static service.EmployeeManagementService.getEmployeeManagementService;
-import static service.RestaurantManagementService.getRestaurantManagementService;
 import static view.EmployeeManagement.getEmployeeManagement;
 import static view.InputValidator.getInt;
-import static view.RestaurantManagement.getRestaurantManagement;
 
-public final class EmployeeManagementController implements TerminalEntryController {
+public final class EmployeeManagementController  {
     private static EmployeeManagementController employeeManagementController;
     private final IEmployeeManagementService employeeManagementService;
 

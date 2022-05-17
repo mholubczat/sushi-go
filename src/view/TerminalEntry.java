@@ -2,8 +2,6 @@ package view;
 
 import java.util.ArrayList;
 
-import static view.MainMenu.getMainMenu;
-
 public abstract class TerminalEntry {
 
     // Each implementing class is a Singleton
