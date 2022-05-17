@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static model.Menu.getMenu;
+
 public abstract class Order {
     private HashMap<MenuItem, Integer> orderItems = new HashMap<>();
     private int orderNumber;
@@ -23,7 +25,11 @@ public abstract class Order {
                         : 1;
         orders.add(this);
     }
-
+    public static void randomOrder(Order order) {
+        for(int i = 0; i < (int)(Math.random()*5+1); i++){
+            order.addOrderItem(getMenu().getCurrentMenu().get((int)(Math.random()*getMenu().getCurrentMenu().size())),((int)(Math.random()*2)+1));
+        }
+    }
     public void addOrderItem(MenuItem menuItem, Integer quantity) {
         orderItems.put(menuItem, quantity);
         value = value.add(menuItem.getPrice().multiply(BigDecimal.valueOf(quantity)));
