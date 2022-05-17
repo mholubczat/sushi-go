@@ -7,6 +7,7 @@ public interface IMenuManagementService {
     void addMenuItem();
 
     void removeMenuItem();
+
     void makeMenuItemAvailable();
 
     void makeMenuItemNotAvailable();

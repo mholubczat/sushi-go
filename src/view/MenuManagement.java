@@ -1,15 +1,16 @@
 package view;
 
-public final class MenuManagement extends TerminalEntry{
+public final class MenuManagement extends TerminalScreen {
     private static MenuManagement menuManagement;
 
-    public MenuManagement(String message) {
+    private MenuManagement(String message) {
         super(message);
     }
 
-    public static MenuManagement getMenuManagement(){
+    public static MenuManagement getMenuManagement() {
         if (menuManagement == null) {
             menuManagement = new MenuManagement("Choose one of the following actions:");
+
             menuManagement.addAction("Show current menu");
             menuManagement.addAction("Add menu item");
             menuManagement.addAction("Remove menu item");

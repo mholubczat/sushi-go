@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Employee {
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
+    private final String firstName;
+    private final String lastName;
+    private final String phoneNumber;
 
     private static List<Employee> employees;
 
@@ -14,16 +14,17 @@ public abstract class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        if(employees==null) employees = new ArrayList<>();
+        if (employees == null) employees = new ArrayList<>();
         employees.add(this);
         System.out.println("Employee hired");
     }
 
-    public void fireEmployee(int number){
+    public void fireEmployee(int number) {
         Class<? extends Employee> profession = employees.get(number).getClass();
 
         employees.remove(number);
-        if(employees.stream().noneMatch(employee -> employee.getClass().equals(profession))) System.out.println("To żeś kurwa narobił");
+        if (employees.stream().noneMatch(employee -> employee.getClass().equals(profession)))
+            System.out.println("To żeś kurwa narobił"); //TODO obsługa wyjątku
     }
 
     public static List<Employee> getEmployees() {
@@ -32,6 +33,6 @@ public abstract class Employee {
 
     @Override
     public String toString() {
-        return employees.indexOf(this) + " - " + getClass().getSimpleName() + " - " + firstName + " " + lastName + " tel. " + phoneNumber;
+        return "[" + employees.indexOf(this) + "] - " + getClass().getSimpleName() + " - " + firstName + " " + lastName + " tel. " + phoneNumber;
     }
 }

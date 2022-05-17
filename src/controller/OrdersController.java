@@ -2,23 +2,14 @@ package controller;
 
 import service.IOrdersService;
 
-import static service.OrdersService.getOrdersService;
-import static view.InputValidator.getInt;
+import static utils.InputValidator.getInt;
 import static view.OrdersManagement.getOrdersManagement;
 
 public final class OrdersController {
-    private static OrdersController ordersController;
     private final IOrdersService ordersService;
 
     public OrdersController(IOrdersService ordersService) {
         this.ordersService = ordersService;
-    }
-
-    public static OrdersController getOrdersController() {
-        if (ordersController == null) {
-            ordersController = new OrdersController(getOrdersService());
-        }
-        return ordersController;
     }
 
     public void invokeAction() {

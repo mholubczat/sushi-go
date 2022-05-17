@@ -1,13 +1,13 @@
 package view;
 
-public final class RestaurantManagement extends TerminalEntry{
+public final class RestaurantManagement extends TerminalScreen {
     private static RestaurantManagement restaurantManagement;
 
-    public RestaurantManagement(String message) {
+    private RestaurantManagement(String message) {
         super(message);
     }
 
-    public static RestaurantManagement getRestaurantManagement(){
+    public static RestaurantManagement getRestaurantManagement() {
         if (restaurantManagement == null) {
             restaurantManagement = new RestaurantManagement("Choose one of the following actions:");
 

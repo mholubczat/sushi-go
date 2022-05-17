@@ -1,13 +1,19 @@
 package main;
 
-import static controller.MainMenuController.getMainMenuController;
+import controller.*;
+import model.Kitchen;
+import service.*;
 
-public class Terminal extends Thread {
-
-
+public class Terminal implements Runnable {
     @Override
     public void run() {
-        super.run();
-        getMainMenuController().invokeAction();
+        new MainMenuController(
+                new EmployeeManagementController(new EmployeeManagementService()),
+                new MenuManagementController(new MenuManagementService()),
+                new RestaurantManagementController(new RestaurantManagementService(new Kitchen())),
+                new OrdersController(new OrdersService())
+        ).invokeAction();
     }
 }
+
+

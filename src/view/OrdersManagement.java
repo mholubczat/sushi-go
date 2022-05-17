@@ -1,13 +1,13 @@
 package view;
 
-public final class OrdersManagement extends TerminalEntry{
+public final class OrdersManagement extends TerminalScreen {
     private static OrdersManagement ordersManagement;
 
-    public OrdersManagement(String message) {
+    private OrdersManagement(String message) {
         super(message);
     }
 
-    public static OrdersManagement getOrdersManagement(){
+    public static OrdersManagement getOrdersManagement() {
         if (ordersManagement == null) {
             ordersManagement = new OrdersManagement("Choose one of the following actions:");
 

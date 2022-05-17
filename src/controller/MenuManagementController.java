@@ -1,23 +1,13 @@
 package controller;
 
-
 import service.IMenuManagementService;
 
-import static service.MenuManagementService.getMenuManagementService;
-import static view.InputValidator.getInt;
+import static utils.InputValidator.getInt;
 import static view.MenuManagement.getMenuManagement;
 import static view.OrdersManagement.getOrdersManagement;
 
 public final class MenuManagementController {
-    private static MenuManagementController menuManagementController;
     private final IMenuManagementService menuManagementService;
-
-    public static MenuManagementController getMenuManagementController() {
-        if (menuManagementController == null) {
-            menuManagementController = new MenuManagementController(getMenuManagementService());
-        }
-        return menuManagementController;
-    }
 
     public MenuManagementController(IMenuManagementService menuManagementService) {
         this.menuManagementService = menuManagementService;

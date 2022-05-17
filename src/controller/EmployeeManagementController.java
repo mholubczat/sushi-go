@@ -1,22 +1,10 @@
 package controller;
-
-
 import service.IEmployeeManagementService;
 
-import static service.EmployeeManagementService.getEmployeeManagementService;
 import static view.EmployeeManagement.getEmployeeManagement;
-import static view.InputValidator.getInt;
-
+import static utils.InputValidator.getInt;
 public final class EmployeeManagementController  {
-    private static EmployeeManagementController employeeManagementController;
     private final IEmployeeManagementService employeeManagementService;
-
-    public static EmployeeManagementController getEmployeeManagementController() {
-        if (employeeManagementController == null) {
-            employeeManagementController = new EmployeeManagementController(getEmployeeManagementService());
-        }
-        return employeeManagementController;
-    }
 
     public EmployeeManagementController(IEmployeeManagementService employeeManagementService) {
         this.employeeManagementService = employeeManagementService;

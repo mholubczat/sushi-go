@@ -1,4 +1,4 @@
-package view;
+package utils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public final class InputValidator {
     private static Scanner scanner = new Scanner(System.in);
+
+    //class validates and parses terminal inputs
 
     public static int getInt(String message) {
         scanner = new Scanner(System.in);
@@ -15,7 +17,7 @@ public final class InputValidator {
             System.out.println("Incorrect input! Please type a number:");
         }
         int result = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); //need to consume line not to clash with other methods from this class
         return result;
     }
 
@@ -60,7 +62,6 @@ public final class InputValidator {
             System.out.println("Incorrect input! Please enter a date in yyyy-mm-dd format");
             scanner.nextLine();
         }
-        LocalDate result = LocalDate.parse(scanner.nextLine());
 
         return LocalDate.parse(scanner.nextLine());
 
@@ -73,7 +74,7 @@ public final class InputValidator {
             System.out.println("Incorrect input! Please enter Y or N");
             scanner.nextLine();
         }
-        if (scanner.hasNext("[Yy]")){
+        if (scanner.hasNext("[Yy]")) {
             scanner.nextLine();
             return true;
         } else return false;

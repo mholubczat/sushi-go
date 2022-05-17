@@ -1,7 +1,7 @@
 package service;
 
-
 import model.MenuItem;
+import view.DisplayMenu;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -10,43 +10,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static model.Menu.getMenu;
-import static model.Menu.setCurrentMenu;
-import static view.InputValidator.*;
-import static view.RestaurantMenu.getRestaurantMenu;
+import static model.Menu.*;
+import static utils.InputValidator.*;
 
 public final class MenuManagementService implements IMenuManagementService {
-    private static MenuManagementService menuManagementService;
-
-
-    public static MenuManagementService getMenuManagementService() {
-        if (menuManagementService == null) {
-            menuManagementService = new MenuManagementService();
-        }
-        return menuManagementService;
-    }
 
     @Override
     public void showMenu() {
-        getRestaurantMenu().display();
+        new DisplayMenu("Currently in menu").display(); //prepare terminal menu screen
     }
 
     @Override
     public void removeMenuItem() {
         showMenu();
-        getMenu().removeMenuItem(getInt("Enter item to be removed"));
+        getCurrentMenu().remove(getInt("Enter item to be removed"));
     }
 
     @Override
     public void addMenuItem() {
-        getMenu().addMenuItem(new MenuItem(getString("Enter menu item name"), getString("Enter menu item description"), getBigDecimal("Enter menu item price")));
+        getCurrentMenu().add(new MenuItem(getString("Enter menu item name"), getString("Enter menu item description"), getBigDecimal("Enter menu item price")));
         System.out.println("Menu item added");
     }
 
     @Override
     public void makeMenuItemAvailable() {
         showMenu();
-        MenuItem item = getMenu().getCurrentMenu().get(getInt("Enter item to be made available"));
+        MenuItem item = getCurrentMenu().get(getInt("Enter item to be made available"));
         if (item.isAvailable())
             System.out.println("Item is already available");
         else {
@@ -57,20 +46,18 @@ public final class MenuManagementService implements IMenuManagementService {
 
     @Override
     public void exportMenu() {
-        System.getProperty("line.separator");
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream("./output/" + getString("Enter file name") + ".csv");
-
+// CSV column names
             fileOutputStream.write("Product".getBytes(StandardCharsets.UTF_8));
-            fileOutputStream.write(59);
+            fileOutputStream.write(59); // ';'  separator
             fileOutputStream.write("Description".getBytes(StandardCharsets.UTF_8));
             fileOutputStream.write(59);
             fileOutputStream.write("Price".getBytes(StandardCharsets.UTF_8));
             fileOutputStream.write(System.getProperty("line.separator").getBytes(StandardCharsets.UTF_8));
-
-
-            for (MenuItem menuItem : getMenu().getCurrentMenu()) {
+            // contents
+            for (MenuItem menuItem : getCurrentMenu()) {
                 fileOutputStream.write(menuItem.getName().getBytes(StandardCharsets.UTF_8));
                 fileOutputStream.write(59);
                 fileOutputStream.write(menuItem.getDescription().getBytes(StandardCharsets.UTF_8));
@@ -83,7 +70,6 @@ public final class MenuManagementService implements IMenuManagementService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -96,7 +82,6 @@ public final class MenuManagementService implements IMenuManagementService {
         }
     }
 
-
     public void importMenu(String fileName) {
         try {
             FileReader fr = new FileReader("./input/" + fileName + ".csv");
@@ -105,6 +90,7 @@ public final class MenuManagementService implements IMenuManagementService {
             throw new RuntimeException(e);
         }
     }
+    //TODO ^ refactor these two
 
     private void readCsv(FileReader fr) throws IOException {
         BufferedReader br = new BufferedReader(fr);
@@ -120,7 +106,7 @@ public final class MenuManagementService implements IMenuManagementService {
     @Override
     public void makeMenuItemNotAvailable() {
         showMenu();
-        MenuItem menuItem = getMenu().getCurrentMenu().get(getInt("Enter item to be set as not available"));
+        MenuItem menuItem = getCurrentMenu().get(getInt("Enter item to be set as not available"));
         if (!menuItem.isAvailable())
             System.out.println("Item is already not available");
         else {

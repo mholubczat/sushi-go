@@ -1,6 +1,6 @@
 package model;
 
-public class OnlineOrder extends Order{
+public class OnlineOrder extends Order {
     private Address address;
 
     public OnlineOrder(Address address) {

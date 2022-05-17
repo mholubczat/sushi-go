@@ -6,29 +6,28 @@ import model.employee.Employee;
 import model.employee.Waiter;
 
 import static model.employee.Employee.getEmployees;
-import static view.InputValidator.*;
-import static view.ProfessionMenu.getProfessionMenu;
+import static utils.InputValidator.*;
+import static view.DisplayProfessions.getProfessionMenu;
 
-public final class EmployeeManagementService implements IEmployeeManagementService{
-    private static EmployeeManagementService employeeManagementService;
+public class EmployeeManagementService implements IEmployeeManagementService {
 
-
-
-    public static EmployeeManagementService getEmployeeManagementService() {
-        if (employeeManagementService == null){
-            employeeManagementService = new EmployeeManagementService();
-        }
-        return employeeManagementService;
+    public EmployeeManagementService() {
     }
 
     @Override
     public void hireEmployee() {
         getProfessionMenu().display();
-        switch(getInt("")){
-           case 0 -> new Cook(getString("Enter first name"),getString("Enter last name"),getPhone("Enter phone number"));
-           case 1 -> new Waiter(getString("Enter first name"),getString("Enter last name"),getPhone("Enter phone number"));
-           case 2 -> new Delivery(getString("Enter first name"),getString("Enter last name"),getPhone("Enter phone number"));
-           default -> {System.out.println("Enter number 0-2"); hireEmployee();}
+        switch (getInt("")) {
+            case 0 ->
+                    new Cook(getString("Enter first name"), getString("Enter last name"), getPhone("Enter phone number"));
+            case 1 ->
+                    new Waiter(getString("Enter first name"), getString("Enter last name"), getPhone("Enter phone number"));
+            case 2 ->
+                    new Delivery(getString("Enter first name"), getString("Enter last name"), getPhone("Enter phone number"));
+            default -> {
+                System.out.println("Enter number 0-2");
+                hireEmployee();
+            }
         }
     }
 
@@ -39,7 +38,8 @@ public final class EmployeeManagementService implements IEmployeeManagementServi
         Class<? extends Employee> profession = getEmployees().get(employeeToDismiss).getClass();
 
         getEmployees().remove(employeeToDismiss);
-        if(getEmployees().stream().noneMatch(employee -> employee.getClass().equals(profession))) System.out.println("To żeś kurwa narobił");
+        if (getEmployees().stream().noneMatch(employee -> employee.getClass().equals(profession)))
+            System.out.println("To żeś kurwa narobił"); //TODO no no
     }
 
     @Override

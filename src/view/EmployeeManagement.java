@@ -1,13 +1,13 @@
 package view;
 
-public final class EmployeeManagement extends TerminalEntry{
+public final class EmployeeManagement extends TerminalScreen {
     private static EmployeeManagement employeeManagement;
 
-    public EmployeeManagement(String message) {
+    private EmployeeManagement(String message) {
         super(message);
     }
 
-    public static EmployeeManagement getEmployeeManagement(){
+    public static EmployeeManagement getEmployeeManagement() {
         if (employeeManagement == null) {
             employeeManagement = new EmployeeManagement("Choose one of the following actions:");
 

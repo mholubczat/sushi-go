@@ -3,8 +3,8 @@ package model;
 import java.math.BigDecimal;
 
 public class MenuItem {
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
     private boolean isAvailable;
     private final BigDecimal price;
 

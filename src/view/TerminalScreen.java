@@ -1,15 +1,14 @@
 package view;
-
 import java.util.ArrayList;
 
-public abstract class TerminalEntry {
+public abstract class TerminalScreen {
 
-    // Each implementing class is a Singleton
     // Message will be displayed in terminal, followed by menu options to pick by pressing numpad keys.
+    // Immutable child classes will be implemented as a Singletons
     String message;
     ArrayList<String> actions;
 
-    public TerminalEntry(String message) {
+    public TerminalScreen(String message) {
         this.message = message;
         this.actions = new ArrayList<>();
     }
