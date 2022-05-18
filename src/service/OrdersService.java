@@ -5,10 +5,6 @@ import view.DisplayMenu;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 
 import static model.Menu.getCurrentMenu;
 import static model.Order.*;
@@ -34,21 +30,19 @@ public final class OrdersService implements IOrdersService {
             newOrder.addOrderItem(menuItem, getInt("Enter quantity"));
             loop = getBoolean("Next item? Enter Y or N");
         }
+        getOrderPriorityQueue().add(newOrder);
     }
+
 
     @Override
     public void showPendingOrders() {
         getOrderPriorityQueue().forEach(System.out::println);
-        getOrderPriorityQueue().stream().sorted().forEach(System.out::println);
     }
 
     @Override
     public void showCompletedOrders() {
-
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
-
         getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date)).forEach(System.out::println);
-
     }
 
     @Override
@@ -60,4 +54,4 @@ public final class OrdersService implements IOrdersService {
         System.out.println("Turnover for " + date + " is " + turnover);
     }
 }
-// TODO order value rounding + display order details
+// TODO display order details

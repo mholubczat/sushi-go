@@ -16,7 +16,6 @@ public abstract class Employee {
         this.phoneNumber = phoneNumber;
         if (employees == null) employees = new ArrayList<>();
         employees.add(this);
-        System.out.println("Employee hired");
     }
 
     public void fireEmployee(int number) {

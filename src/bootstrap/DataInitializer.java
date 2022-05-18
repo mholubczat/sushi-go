@@ -29,7 +29,7 @@ public class DataInitializer {
 
         //  5-10 local orders (1-5 menu positions). Every order subtracted by 0 to 10 minutes
         for (int i = 0; i < (int) (Math.random() * 6 + 5); i++) {
-            Order.randomOrder(new LocalOrder(i));
+          Order.randomOrder(new LocalOrder(i));
         }
 
         // same for online orders (

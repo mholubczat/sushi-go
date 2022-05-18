@@ -1,14 +1,17 @@
 package model;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static java.time.format.DateTimeFormatter.ISO_TIME;
 import static model.Menu.getCurrentMenu;
 
 public abstract class Order implements Comparable<Order>{
-    private HashMap<MenuItem, Integer> orderItems = new HashMap<>();
+    private final HashMap<MenuItem, Integer> orderItems = new HashMap<>();
     private final int orderNumber;
     private LocalDateTime orderTime;
     private boolean isCompleted = false;
@@ -32,20 +35,20 @@ public abstract class Order implements Comparable<Order>{
             workDay = LocalDate.now();
         }
         this.orderNumber = currentNumber++;
-        orderPriorityQueue.add(this);
     }
 
     @Override
     public int compareTo(Order o) {
-        if(getClass().equals(o.getClass())) return getOrderTime().compareTo(o.getOrderTime());
+        if(getClass().equals(o.getClass())) {return getOrderTime().compareTo(o.getOrderTime());}
         else return o.getClass().equals(LocalOrder.class) ? 1 : -1;
     }
 
     public static void randomOrder(Order order) {
         for (int i = 0; i < (int) (Math.random() * 5 + 1); i++) {
             order.addOrderItem(getCurrentMenu().get((int) (Math.random() * getCurrentMenu().size())), ((int) (Math.random() * 2) + 1));
-            order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 10)));
         }
+        order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 10)));
+        orderPriorityQueue.add(order);
     }
 
     public void addOrderItem(MenuItem menuItem, Integer quantity) {
@@ -105,12 +108,10 @@ public abstract class Order implements Comparable<Order>{
         sb.append(" number ");
         sb.append(orderNumber);
         sb.append(", ordered today at ");
-        sb.append(orderTime.getHour());
-        sb.append(":");
-        sb.append(orderTime.getMinute());
+        sb.append(orderTime.format(DateTimeFormatter.ofPattern("HH:mm")));
         if (isDelayed) sb.append(" ORDER DELAYED! ");
         sb.append(", value is ");
-        sb.append(value);
+        sb.append(new DecimalFormat("0.00").format(value));
 
         return sb.toString();
     }
