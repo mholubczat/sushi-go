@@ -1,12 +1,10 @@
 package model;
 
-import model.IncomingOnlineOrders;
-import model.Order;
+
 import model.employee.Cook;
 
-import static java.lang.Thread.currentThread;
 import static model.employee.Employee.getEmployees;
-import static service.OrdersService.toDoList;
+
 
 public final class Kitchen{
     private static boolean isWorking = false; //TODO czy static??
@@ -18,6 +16,12 @@ public final class Kitchen{
 
     public void setWorking(boolean working) {
         isWorking = working;
+    }
+
+    // zakładam że każdy kolejny kucharz nie zredukuje czasu przygotowania liniowo, przyjąłem t=To/n^(0,75) zgrubna estymacja
+    // w grupie migają się od roboty! o głupotach gadajo
+    public static long getCookSpeed() {
+        return (long) (5000 / Math.pow(getEmployees().stream().filter(e -> e.getClass().equals(Cook.class)).count(), 0.75));
     }
 }
 /*

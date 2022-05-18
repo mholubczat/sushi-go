@@ -11,19 +11,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import static model.Menu.getCurrentMenu;
-import static model.Order.getOrders;
+import static model.Order.*;
 import static utils.InputValidator.*;
 
 public final class OrdersService implements IOrdersService {
-
-    public static Comparator<Order> toDo = (o1, o2) -> {
-        if (o1.getClass().equals(o2.getClass())) return o1.getOrderTime().compareTo(o2.getOrderTime());
-        else return o2.getClass().equals(LocalOrder.class) ? 1 : -1;
-    };
-
-    public static List<Order> toDoList() {
-        return getOrders().stream().filter(Predicate.not(Order::isCompleted)).sorted(toDo).toList();
-    }
 
     @Override
     public void addOrder() {
@@ -47,12 +38,8 @@ public final class OrdersService implements IOrdersService {
 
     @Override
     public void showPendingOrders() {
-        AtomicBoolean flag = new AtomicBoolean(false);
-        toDoList().forEach(order -> {
-                    flag.set(true);
-                    System.out.println(order);
-                });
-        if (!flag.get()) System.out.println("Nothing to display: all orders have been completed!\n");
+        getOrderPriorityQueue().forEach(System.out::println);
+        getOrderPriorityQueue().stream().sorted().forEach(System.out::println);
     }
 
     @Override
@@ -60,19 +47,16 @@ public final class OrdersService implements IOrdersService {
 
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
 
-        getOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date))
-                .filter(Order::isCompleted)
-                .forEach(System.out::println);
+        getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date)).forEach(System.out::println);
 
-        System.out.println("No more orders");
     }
 
     @Override
     public void displayTurnover() {
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
         BigDecimal turnover =
-                getOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date))
-                        .filter(Order::isCompleted).map(Order::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+                getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date))
+                        .map(Order::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
         System.out.println("Turnover for " + date + " is " + turnover);
     }
 }
