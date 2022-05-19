@@ -3,9 +3,8 @@ package bootstrap;
 import model.Address;
 import model.LocalOrder;
 import model.OnlineOrder;
-import model.Order;
 import model.employee.Cook;
-import model.employee.Delivery;
+import model.employee.Deliverer;
 import model.employee.Waiter;
 import service.MenuManagementService;
 import service.OrdersService;
@@ -22,8 +21,8 @@ public class DataInitializer {
         new Cook("Erich", "Weeks", "277130665");
         new Waiter("Julie", "Potter", "422470431");
         new Waiter("Sybill", "Mills", "718722415");
-        new Delivery("Rhiannon", "Park", "920667785");
-        new Delivery("Griffin", "Kirk", "035351756");
+        new Deliverer("Rhiannon", "Park", "920667785");
+        new Deliverer("Griffin", "Kirk", "035351756");
 
         // menu - imported from csv (input folder)
         new MenuManagementService().importMenu("BootstrapMenu");

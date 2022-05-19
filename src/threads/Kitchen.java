@@ -1,63 +1,61 @@
 package threads;
 
+import model.LocalOrder;
 import model.Order;
 import model.employee.Cook;
 
+import java.util.AbstractMap;
+import java.util.Map;
 
+import static model.Order.getOrdersToDeliver;
 import static model.Order.getPendingOrders;
+import static model.employee.Cook.getCooks;
 import static model.employee.Employee.getEmployees;
 
 
 public class Kitchen extends Thread {
-    private static boolean isWorking = false;
+    private boolean isWorking = false;
 
     @Override
     public void run() {
         super.run();
         try {
-            startWorking(isWorking);
+            prepareNextOrder();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void startWorking(boolean working) throws InterruptedException {
-        isWorking = working;
-        prepareNextOrder();
-    }
-    public void setWorking(Boolean isWorking){
-        this.isWorking=isWorking;
-    }
-
-    public static void prepareNextOrder() throws InterruptedException {
+    private void prepareNextOrder() throws InterruptedException {
         Order nextOrder;
-        synchronized (getPendingOrders()) {
-            while (getPendingOrders().isEmpty())
-                try {
+        synchronized (getPendingOrders()){
+            if (getPendingOrders().isEmpty()){
+                System.out.println("czekam");
                     getPendingOrders().wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
+                System.out.println("jade");
+            }}
+        if (isWorking){
+            ///co robim?
             nextOrder = getPendingOrders().poll();
-        }
-        if (isWorking) {
-
+            System.out.println(nextOrder);
             sleep(getCookSpeed());
-            nextOrder.setCompleted(true);
+            assert nextOrder != null;
+            //https://www.baeldung.com/java-map-entry
+            //https://stackoverflow.com/questions/20945984/is-there-blockingmap-as-blockingqueue-in-java
+            if(nextOrder.getClass().equals(LocalOrder.class)) getOrdersToDeliver().add(new AbstractMap.SimpleEntry<>(1,nextOrder));
+            else getOrdersToDeliver().add(new AbstractMap.SimpleEntry<>(2,nextOrder));
+            getOrdersToDeliver().notify();
         }
         if (isWorking) prepareNextOrder();
-
 }
 
-
-public static void setWorking(boolean working){
+public void setWorking(boolean working){
         isWorking=working;
         }
 
 // zakładam że każdy kolejny kucharz nie zredukuje czasu przygotowania liniowo, przyjąłem t=To/n^(0,75) zgrubna estymacja
 // w grupie migają się od roboty! o głupotach gadajo
-private static long getCookSpeed(){
-        return(long)(5000/Math.pow(getEmployees().stream().filter(e->e.getClass().equals(Cook.class)).count(),0.75));
+private long getCookSpeed(){
+        return(long)(50000/Math.pow(getCooks().size(),0.75));
         }
 }

@@ -1,16 +1,20 @@
 package model;
 
+import model.employee.Employee;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import static java.time.format.DateTimeFormatter.ISO_TIME;
 import static model.Menu.getCurrentMenu;
 
-public abstract class Order implements Comparable<Order>{
+public abstract class Order implements Comparable<Order> {
     private final HashMap<MenuItem, Integer> orderItems = new HashMap<>();
     private final int orderNumber;
     private LocalDateTime orderTime;
@@ -25,12 +29,12 @@ public abstract class Order implements Comparable<Order>{
     private static final PriorityQueue<Order> pendingOrders = new PriorityQueue<>();
 
     private static final ArrayList<Order> finishedOrders = new ArrayList<>();
-
+private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDeliver = new PriorityBlockingQueue<>();
 
     public Order() {
 
         this.orderTime = LocalDateTime.now();
-        if (workDay==null || !workDay.equals(LocalDate.now())) {
+        if (workDay == null || !workDay.equals(LocalDate.now())) {
             currentNumber = 1;
             workDay = LocalDate.now();
         }
@@ -39,11 +43,10 @@ public abstract class Order implements Comparable<Order>{
 
     @Override
     public int compareTo(Order o) {
-        if(getClass().equals(o.getClass())) {return getOrderTime().compareTo(o.getOrderTime());}
-        else return o.getClass().equals(LocalOrder.class) ? 1 : -1;
+        if (getClass().equals(o.getClass())) {
+            return getOrderTime().compareTo(o.getOrderTime());
+        } else return o.getClass().equals(LocalOrder.class) ? 1 : -1;
     }
-
-
 
     public void addOrderItem(MenuItem menuItem, Integer quantity) {
         orderItems.put(menuItem, quantity);
@@ -62,7 +65,7 @@ public abstract class Order implements Comparable<Order>{
         this.orderTime = orderTime;
     }
 
-    public static ArrayList<Order> getFinishedOrders(){
+    public static ArrayList<Order> getFinishedOrders() {
         return finishedOrders;
     }
 
@@ -85,9 +88,14 @@ public abstract class Order implements Comparable<Order>{
     public BigDecimal getValue() {
         return value;
     }
-    public static PriorityQueue<Order> getPendingOrders(){
+
+    public static PriorityQueue<Order> getPendingOrders() {
         return pendingOrders;
-}
+    }
+
+    public static PriorityBlockingQueue<Map.Entry<Integer,Order>> getOrdersToDeliver() {
+        return ordersToDeliver;
+    }
 
     public HashMap<MenuItem, Integer> getOrderItems() {
         return orderItems;

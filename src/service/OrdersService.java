@@ -50,10 +50,7 @@ public final class OrdersService implements IOrdersService {
 
     @Override
     public void showPendingOrders() {
-        synchronized (getPendingOrders()){
         getPendingOrders().forEach(System.out::println);
-        getPendingOrders().notify();
-        }
     }
 
     @Override

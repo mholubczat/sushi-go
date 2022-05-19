@@ -30,7 +30,6 @@ private final OrdersController ordersController;
                 invokeAction();
             }
         }
-        System.out.println("\n");
         invokeAction();
     }
 }

@@ -17,7 +17,9 @@ public final class RestaurantManagementController {
 
             case 0 -> restaurantManagementService.startRestaurantWork();
             case 1 -> restaurantManagementService.stopRestaurantWork();
-            case 2 -> {
+            case 2 -> restaurantManagementService.startReceivingOnlineOrders();
+            case 3 -> restaurantManagementService.stopReceivingOnlineOrders();
+            case 4 -> {
             }
             default -> {
                 System.out.println("Please choose and option from 0 to " + (getRestaurantManagement().getActions().size() - 1));

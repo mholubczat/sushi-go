@@ -2,12 +2,12 @@ package model.employee;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
-public abstract class Employee {
+public abstract class Employee implements Executor {
     private final String firstName;
     private final String lastName;
     private final String phoneNumber;
-
     private static List<Employee> employees;
 
     public Employee(String firstName, String lastName, String phoneNumber) {

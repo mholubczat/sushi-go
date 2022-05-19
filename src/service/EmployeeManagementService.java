@@ -1,7 +1,7 @@
 package service;
 
 import model.employee.Cook;
-import model.employee.Delivery;
+import model.employee.Deliverer;
 import model.employee.Employee;
 import model.employee.Waiter;
 
@@ -23,7 +23,7 @@ public class EmployeeManagementService implements IEmployeeManagementService {
             case 1 ->
                     new Waiter(getString("Enter first name"), getString("Enter last name"), getPhone("Enter phone number"));
             case 2 ->
-                    new Delivery(getString("Enter first name"), getString("Enter last name"), getPhone("Enter phone number"));
+                    new Deliverer(getString("Enter first name"), getString("Enter last name"), getPhone("Enter phone number"));
             default -> {
                 System.out.println("Enter number 0-2");
                 hireEmployee();

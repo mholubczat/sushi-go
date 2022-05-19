@@ -11,9 +11,10 @@ public final class RestaurantManagement extends TerminalScreen {
         if (restaurantManagement == null) {
             restaurantManagement = new RestaurantManagement("Choose one of the following actions:");
 
-            restaurantManagement.addAction("Start/resume restaurant work");
+            restaurantManagement.addAction("Start restaurant work");
             restaurantManagement.addAction("Stop restaurant work");
-            restaurantManagement.addAction("Display turnover");
+            restaurantManagement.addAction("Start receiving online orders");
+            restaurantManagement.addAction("Stop receiving online orders");
             restaurantManagement.addAction("Back to previous menu");
         }
         return restaurantManagement;
