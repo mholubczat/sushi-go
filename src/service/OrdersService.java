@@ -5,6 +5,7 @@ import view.DisplayMenu;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static model.Menu.getCurrentMenu;
 import static model.Order.*;
@@ -30,13 +31,29 @@ public final class OrdersService implements IOrdersService {
             newOrder.addOrderItem(menuItem, getInt("Enter quantity"));
             loop = getBoolean("Next item? Enter Y or N");
         }
-        getOrderPriorityQueue().add(newOrder);
+        synchronized (getPendingOrders()) {
+            getPendingOrders().add(newOrder);
+            getPendingOrders().notify();
+        }
     }
 
+    public static void randomOrder(Order order) {
+        for (int i = 0; i < (int) (Math.random() * 5 + 1); i++) {
+            order.addOrderItem(getCurrentMenu().get((int) (Math.random() * getCurrentMenu().size())), ((int) (Math.random() * 2) + 1));
+        }
+        order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 10)));
+        synchronized (getPendingOrders()) {
+            getPendingOrders().add(order);
+            getPendingOrders().notify();
+        }
+    }
 
     @Override
     public void showPendingOrders() {
-        getOrderPriorityQueue().forEach(System.out::println);
+        synchronized (getPendingOrders()){
+        getPendingOrders().forEach(System.out::println);
+        getPendingOrders().notify();
+        }
     }
 
     @Override

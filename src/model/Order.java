@@ -22,7 +22,7 @@ public abstract class Order implements Comparable<Order>{
 
     private static LocalDate workDay;
 
-    private static final PriorityQueue<Order> orderPriorityQueue = new PriorityQueue<>();
+    private static final PriorityQueue<Order> pendingOrders = new PriorityQueue<>();
 
     private static final ArrayList<Order> finishedOrders = new ArrayList<>();
 
@@ -43,13 +43,7 @@ public abstract class Order implements Comparable<Order>{
         else return o.getClass().equals(LocalOrder.class) ? 1 : -1;
     }
 
-    public static void randomOrder(Order order) {
-        for (int i = 0; i < (int) (Math.random() * 5 + 1); i++) {
-            order.addOrderItem(getCurrentMenu().get((int) (Math.random() * getCurrentMenu().size())), ((int) (Math.random() * 2) + 1));
-        }
-        order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 10)));
-        orderPriorityQueue.add(order);
-    }
+
 
     public void addOrderItem(MenuItem menuItem, Integer quantity) {
         orderItems.put(menuItem, quantity);
@@ -66,10 +60,6 @@ public abstract class Order implements Comparable<Order>{
 
     public void setOrderTime(LocalDateTime orderTime) {
         this.orderTime = orderTime;
-    }
-
-    public static PriorityQueue<Order> getOrderPriorityQueue(){
-        return orderPriorityQueue;
     }
 
     public static ArrayList<Order> getFinishedOrders(){
@@ -95,6 +85,9 @@ public abstract class Order implements Comparable<Order>{
     public BigDecimal getValue() {
         return value;
     }
+    public static PriorityQueue<Order> getPendingOrders(){
+        return pendingOrders;
+}
 
     public HashMap<MenuItem, Integer> getOrderItems() {
         return orderItems;
@@ -115,4 +108,6 @@ public abstract class Order implements Comparable<Order>{
 
         return sb.toString();
     }
+
+
 }

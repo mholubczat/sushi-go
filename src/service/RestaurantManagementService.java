@@ -1,21 +1,16 @@
 package service;
 
-import model.Kitchen;
+import static threads.Kitchen.setWorking;
 
-public class RestaurantManagementService implements IRestaurantManagementService{
-private static Kitchen kitchen;
-
-    public RestaurantManagementService(Kitchen kitchen) {
-    this.kitchen = kitchen;
-    }
+public class RestaurantManagementService implements IRestaurantManagementService {
 
     @Override
     public void startRestaurantWork() {
-        kitchen.setWorking(true);
+        setWorking(true);
     }
 
     @Override
     public void stopRestaurantWork() {
-        kitchen.setWorking(false);
+        setWorking(false);
     }
 }
