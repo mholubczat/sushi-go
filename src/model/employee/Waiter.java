@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +18,6 @@ public class Waiter extends Employee {
     private BigDecimal totalTip = BigDecimal.ZERO;
     private BigDecimal todayTip = BigDecimal.ZERO;
     private int tablesToday = 0;
-    private int tablesTotal = 0;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -27,24 +25,6 @@ public class Waiter extends Employee {
         super(firstName, lastName, phoneNumber);
         waiterList.add(this);
     }
-
-    public BigDecimal getTotalTip() {
-        return totalTip;
-    }
-
-
-    public BigDecimal getTodayTip() {
-        return todayTip;
-    }
-
-    public int getTablesToday() {
-        return tablesToday;
-    }
-
-    public int getTablesTotal() {
-        return tablesTotal;
-    }
-
     public LocalDateTime getLastTableTime() {
         return lastTableTime;
     }
@@ -62,10 +42,9 @@ public class Waiter extends Employee {
     }
 
     public void completeOrder(Order order) {
-        BigDecimal tip = getTip(order);
+        BigDecimal tip = getTip(order).setScale(2,RoundingMode.CEILING);
         if (getInspectMode()) System.out.println("Tip for " + order + " is " + tip);
         totalTip = totalTip.add(tip);
-        tablesTotal++;
         if (lastTableTime.toLocalDate().equals(LocalDate.now())) {
             tablesToday++;
             todayTip = todayTip.add(tip);

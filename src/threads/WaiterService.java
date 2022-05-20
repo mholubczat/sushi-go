@@ -26,14 +26,13 @@ public class WaiterService extends Thread {
     private void startWaiterService() throws InterruptedException {
 
         Order nextTable = getTablesToServe().take();
-        if (getInspectMode()) System.out.println(nextTable + " will be delivered");
         getWaiterList().sort(Comparator.comparing(Waiter::getLastTableTime));
         Waiter waiter = getWaiterList().get(0);
-        synchronized(waiter){
-            if (getInspectMode()) System.out.println(waiter + " will be delivering");
+       synchronized(waiter){
             waiter.getExecutor().submit(
 
                     () -> {
+                        if (getInspectMode()) System.out.println(waiter + " serves " + nextTable);
                         try {
                             Thread.sleep(120000/speedUp/speedUp);
                             waiter.completeOrder(nextTable);

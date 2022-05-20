@@ -22,6 +22,7 @@ public class RestaurantManagementService implements IRestaurantManagementService
         kitchen.setWorking(true);
         kitchen.start();
         //Zakładam że personel wydaje przygotowane posiłki nawet jeśli kuchnia już nie pracuje
+
         DeliveryService deliveryService = new DeliveryService();
         deliveryService.start();
         WaiterService waiterService = new WaiterService();

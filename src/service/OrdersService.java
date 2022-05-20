@@ -4,12 +4,11 @@ import model.*;
 import view.DisplayMenu;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.stream.Stream;
 
@@ -88,7 +87,7 @@ public final class OrdersService implements IOrdersService {
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
         getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date)).forEach(System.out::println);
         boolean details = getBoolean("Show order details? Y/N");
-        if (details) orderDetails(getFinishedOrders(), date);
+        if (details) orderDetails(date);
     }
 
     @Override
@@ -96,11 +95,11 @@ public final class OrdersService implements IOrdersService {
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
         BigDecimal turnover =
                 getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date))
-                        .map(Order::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        .map(Order::getValue).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, RoundingMode.CEILING);
         System.out.println("Turnover for " + date + " is " + turnover);
     }
 
-    public void orderDetails(ArrayList<Order> list, LocalDate date) {
+    public void orderDetails(LocalDate date) {
         int orderToDisplay = getInt("Select order to display");
         List<Order> order = getFinishedOrders().stream().filter(o -> o.getOrderTime().toLocalDate().equals(date))
                 .filter(o -> o.getOrderNumber() == orderToDisplay).toList();
@@ -117,10 +116,10 @@ public final class OrdersService implements IOrdersService {
     }
 
     public void orderDetails(PriorityQueue<Order> priorityQueue) {
-        displayOrderStream(priorityQueue.stream(), priorityQueue);
+        displayOrderStream(priorityQueue.stream());
     }
 
-    private void displayOrderStream(Stream<Order> stream, Queue<Order> priorityQueue) {
+    private void displayOrderStream(Stream<Order> stream) {
         int orderToDisplay = getInt("Select order to display");
         List<Order> order = stream
                 .filter(o -> o.getOrderNumber() == orderToDisplay).toList();
@@ -128,7 +127,6 @@ public final class OrdersService implements IOrdersService {
     }
 
     public void orderDetails(PriorityBlockingQueue<Order> priorityQueue) {
-        displayOrderStream(priorityQueue.stream(), priorityQueue);
+        displayOrderStream(priorityQueue.stream());
     }
 }
-// TODO display order details

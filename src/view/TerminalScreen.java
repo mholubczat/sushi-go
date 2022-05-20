@@ -6,7 +6,7 @@ public abstract class TerminalScreen {
     // Message will be displayed in terminal, followed by menu options to pick by pressing numpad keys.
     // Immutable child classes will be implemented as a Singletons
     final String message;
-    ArrayList<String> actions;
+    final ArrayList<String> actions;
 
     public TerminalScreen(String message) {
         this.message = message;
@@ -23,10 +23,6 @@ public abstract class TerminalScreen {
 
     public void addAction(String action){
         actions.add(action);
-    }
-
-    public void setActions(ArrayList<String> actions) {
-        this.actions = actions;
     }
 
     public ArrayList<String> getActions() {

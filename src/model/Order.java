@@ -56,7 +56,7 @@ public abstract class Order implements Comparable<Order> {
 
     public void addOrderItem(MenuItem menuItem, Integer quantity) {
         orderItems.put(menuItem, quantity);
-        value = value.add(menuItem.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        value = value.add(menuItem.getPrice().multiply(BigDecimal.valueOf(quantity))).setScale(2,RoundingMode.CEILING);
     }
 
     public LocalDateTime getOrderTime() {

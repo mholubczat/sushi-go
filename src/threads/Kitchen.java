@@ -22,6 +22,7 @@ public class Kitchen extends Thread {
     public void run() {
         super.run();
         try {
+            handleDelays();
             prepareNextOrder();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -31,62 +32,62 @@ public class Kitchen extends Thread {
     private void prepareNextOrder() throws InterruptedException {
         Order nextOrder;
         // czekam na zamówienia
+        synchronized (getPendingOrders()) {
+            if (getPendingOrders().isEmpty()) {
 
-            if (getPendingOrders().isEmpty()){
-                synchronized (getPendingOrders()) {
-                    if(getInspectMode()) System.out.println("Kitchen has no more orders to process");
-                    getPendingOrders().wait();
-                    if(getInspectMode()) System.out.println("Kitchen resumed work");
-                }
-            // ogarnij opóźnione
-        } else if (nextCheck==null||nextCheck.isBefore(LocalDateTime.now())){
-                if(getInspectMode()) System.out.println("Checking for delayed orders");
-                   handleDelays();
+                if (getInspectMode()) System.out.println("Kitchen has no more orders to process");
+                getPendingOrders().wait();
+                if (getInspectMode()) System.out.println("Kitchen resumed work");
+
+                // ogarnij opóźnione
+            } else if (nextCheck == null || nextCheck.isBefore(LocalDateTime.now())) {
+                if (getInspectMode()) System.out.println("Checking for delayed orders");
+                handleDelays();
+                nextCheck = LocalDateTime.now().plusMinutes(14);
             }
 
-        if (isWorking){
-            nextOrder = getPendingOrders().poll();
-            if(getInspectMode()) System.out.println("Kitchen prepares order " + nextOrder);
-            sleep(getCookSpeed());
-            assert nextOrder != null;
-            nextOrder.setPrepared();
-        }
-        if (isWorking) prepareNextOrder();
-}
-
-public void handleDelays(){
-    LinkedList<Order> delayQueue = getDelayQueue();
-    while (delayQueue.peek() != null) {
-        if (delayQueue.peek().isPrepared()) {
-            delayQueue.poll();
-        }
-        else {
-            assert delayQueue.peek() != null;
-            if (delayQueue.peek().getOrderTime().isAfter(LocalDateTime.now().minusMinutes(15))) break;
-            if(getInspectMode()) System.out.println("Delayed order found " + delayQueue.peek());
-            Objects.requireNonNull(delayQueue.poll()).setDelayed(true);
+            if (isWorking) {
+                nextOrder = getPendingOrders().poll();
+                if (getInspectMode()) System.out.println("Kitchen prepares order " + nextOrder);
+                sleep(getCookSpeed());
+                assert nextOrder != null;
+                nextOrder.setPrepared();
+            }
+            if (isWorking) prepareNextOrder();
         }
     }
 
-    nextCheck = LocalDateTime.now().plusMinutes(14);
-
-}
-
-public void setWorking(boolean working){
-        isWorking=working;
+    public void handleDelays() {
+        synchronized (getDelayQueue()) {
+            LinkedList<Order> delayQueue = getDelayQueue();
+            while (delayQueue.peek() != null) {
+                if (delayQueue.peek().isPrepared()) {
+                    delayQueue.poll();
+                } else {
+                    assert delayQueue.peek() != null;
+                    if (delayQueue.peek().getOrderTime().isAfter(LocalDateTime.now().minusMinutes(15))) break;
+                    if (getInspectMode()) System.out.println("Delayed order found " + delayQueue.peek());
+                    Objects.requireNonNull(delayQueue.poll()).setDelayed(true);
+                }
+            }
         }
+    }
 
-// zakładam że każdy kolejny kucharz nie zredukuje czasu przygotowania liniowo, przyjąłem t=To/n^(0,75) zgrubna estymacja
-// w grupie migają się od roboty! o głupotach gadajo
-private static long getCookSpeed(){
-        return(long)(50000/speedUp/Math.pow(getCooks().size(),0.75));
-        }
+    public void setWorking(boolean working) {
+        isWorking = working;
+    }
+
+    // zakładam że każdy kolejny kucharz nie zredukuje czasu przygotowania liniowo, przyjąłem t=To/n^(0,75) zgrubna estymacja
+
+    private static long getCookSpeed() {
+        return (long) (50000 / speedUp / Math.pow(getCooks().size(), 0.75));
+    }
 
     public static boolean isWorking() {
         return isWorking;
     }
 
-    public static void setSpeedUp(long l){
+    public static void setSpeedUp(long l) {
         speedUp = l;
-        }
+    }
 }
