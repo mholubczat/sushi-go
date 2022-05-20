@@ -1,6 +1,7 @@
 package utils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -78,5 +79,9 @@ public final class InputValidator {
             scanner.nextLine();
             return true;
         } else return false;
+    }
+
+    public static DecimalFormat getPriceFormat(){
+        return new DecimalFormat("0.00");
     }
 }

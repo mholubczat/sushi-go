@@ -5,7 +5,7 @@ public abstract class TerminalScreen {
 
     // Message will be displayed in terminal, followed by menu options to pick by pressing numpad keys.
     // Immutable child classes will be implemented as a Singletons
-    String message;
+    final String message;
     ArrayList<String> actions;
 
     public TerminalScreen(String message) {

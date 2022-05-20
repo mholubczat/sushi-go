@@ -5,9 +5,14 @@ public interface IOrdersService {
 
     void showPendingOrders();
 
+    void showServedOrders();
+
+    void showDeliveredOrders();
+
     void showCompletedOrders();
 
     void displayTurnover();
+
 }
 
 

@@ -36,10 +36,8 @@ public class EmployeeManagementService implements IEmployeeManagementService {
         showEmployees();
         int employeeToDismiss = getInt("Enter employee number");
         Class<? extends Employee> profession = getEmployees().get(employeeToDismiss).getClass();
-
+        if (getEmployees().stream().filter(employee -> employee.getClass().equals(profession)).count()==1) throw new RuntimeException("Cannot fire last " + profession.getSimpleName());
         getEmployees().remove(employeeToDismiss);
-        if (getEmployees().stream().noneMatch(employee -> employee.getClass().equals(profession)))
-            System.out.println("To żeś kurwa narobił"); //TODO no no
     }
 
     @Override

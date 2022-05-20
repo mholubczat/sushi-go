@@ -13,10 +13,4 @@ public class Cook extends Employee {
     public static List<Cook> getCooks() {
         return cooks;
     }
-
-    @Override
-    public void execute(Runnable command) {
-        final Runnable asd = () -> System.out.println("asd");
-    }
-
 }

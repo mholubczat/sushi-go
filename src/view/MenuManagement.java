@@ -3,13 +3,13 @@ package view;
 public final class MenuManagement extends TerminalScreen {
     private static MenuManagement menuManagement;
 
-    private MenuManagement(String message) {
-        super(message);
+    private MenuManagement() {
+        super("Choose one of the following actions:");
     }
 
     public static MenuManagement getMenuManagement() {
         if (menuManagement == null) {
-            menuManagement = new MenuManagement("Choose one of the following actions:");
+            menuManagement = new MenuManagement();
 
             menuManagement.addAction("Show current menu");
             menuManagement.addAction("Add menu item");

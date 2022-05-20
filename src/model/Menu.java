@@ -12,5 +12,4 @@ public class Menu {
     public static void setCurrentMenu(ArrayList<MenuItem> currentMenu) {
         Menu.currentMenu = currentMenu;
     }
-
 }

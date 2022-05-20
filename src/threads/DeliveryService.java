@@ -1,29 +1,15 @@
 package threads;
 
-import model.OnlineOrder;
 import model.Order;
-import model.employee.Cook;
 import model.employee.Deliverer;
-import model.employee.Employee;
-
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-
+import java.util.Comparator;
 import static model.Order.getOrdersToDeliver;
 import static model.employee.Deliverer.getDelivererList;
-import static model.employee.Employee.getEmployees;
-import static model.employee.Waiter.getWaiterList;
+import static threads.Kitchen.isWorking;
+import static threads.Kitchen.speedUp;
+import static view.DisplayMenu.getInspectMode;
 
-public abstract class DeliveryService<T> extends Thread {
-
-    ThreadPoolExecutor threadPoolExecutor;
-    //https://www.baeldung.com/thread-pool-java-and-guava
-    private List<T> executorList;
-
-    public DeliveryService() {
-        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(executorList.size());
-    }
+public class DeliveryService extends Thread {
 
     @Override
     public void run() {
@@ -36,23 +22,26 @@ public abstract class DeliveryService<T> extends Thread {
     }
 
     private void startDelivery() throws InterruptedException {
-        synchronized (getOrdersToDeliver()) {
+            Order nextDelivery = getOrdersToDeliver().take();
+        if (getInspectMode()) System.out.println(nextDelivery + " will be delivered");
+            getDelivererList().sort(Comparator.comparing(Deliverer::getLastDeliveryTime));
+            Deliverer deliverer = getDelivererList().get(0);
+        synchronized(deliverer){
+        if (getInspectMode()) System.out.println(deliverer + " will be delivering");
+            deliverer.getExecutor().submit(
 
-            threadPoolExecutor.submit(getOrdersToDeliver().take())
                     () -> {
                         try {
-                            Thread.sleep(120000);
-
-                            getOrdersToDeliver().take().getValue().setCompleted(true);
+                            Thread.sleep(120000/speedUp/speedUp);
+                            deliverer.completeOrder(nextDelivery);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
             );
-
-
         }
-        startDelivery();
+        if (isWorking() || getOrdersToDeliver().size() != 0)
+            startDelivery();
     }
 
 }

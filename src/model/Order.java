@@ -1,26 +1,25 @@
 package model;
 
-import model.employee.Employee;
-
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
+
 import java.util.concurrent.PriorityBlockingQueue;
 
-import static java.time.format.DateTimeFormatter.ISO_TIME;
-import static model.Menu.getCurrentMenu;
+import static view.DisplayMenu.getInspectMode;
 
 public abstract class Order implements Comparable<Order> {
     private final HashMap<MenuItem, Integer> orderItems = new HashMap<>();
     private final int orderNumber;
     private LocalDateTime orderTime;
     private boolean isCompleted = false;
+    private boolean isPrepared = false;
     private boolean isDelayed = false;
-    private BigDecimal value = BigDecimal.ZERO;
+    private BigDecimal value = BigDecimal.ZERO.setScale(2, RoundingMode.CEILING);
 
     private static int currentNumber;
 
@@ -28,8 +27,11 @@ public abstract class Order implements Comparable<Order> {
 
     private static final PriorityQueue<Order> pendingOrders = new PriorityQueue<>();
 
+    private static final LinkedList<Order> delayQueue = new LinkedList<>();
+
     private static final ArrayList<Order> finishedOrders = new ArrayList<>();
-private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDeliver = new PriorityBlockingQueue<>();
+    private static final PriorityBlockingQueue<Order> ordersToDeliver = new PriorityBlockingQueue<>();
+    private static final PriorityBlockingQueue<Order> ordersToGiveOut = new PriorityBlockingQueue<>();
 
     public Order() {
 
@@ -43,6 +45,10 @@ private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDel
 
     @Override
     public int compareTo(Order o) {
+        if (isDelayed != o.isDelayed()) {
+            if (isDelayed) return -1;
+            else return 1;
+        }
         if (getClass().equals(o.getClass())) {
             return getOrderTime().compareTo(o.getOrderTime());
         } else return o.getClass().equals(LocalOrder.class) ? 1 : -1;
@@ -69,12 +75,13 @@ private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDel
         return finishedOrders;
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
+    public boolean isPending() {
+        return !isCompleted;
     }
 
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
+    public void setCompleted() {
+        isCompleted = true;
+        finishedOrders.add(this);
     }
 
     public boolean isDelayed() {
@@ -83,6 +90,21 @@ private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDel
 
     public void setDelayed(boolean delayed) {
         isDelayed = delayed;
+        // 50% szans na bunt
+        if (Math.random() < 0.5) {
+            this.setCompleted();
+            this.setValue(BigDecimal.ZERO);
+            if(getInspectMode()) System.out.println("Delayed order refused! Setting value to 0, order will not be prepared " + this);
+            if (!isPrepared) pendingOrders.remove(this);
+        } else {
+            this.setValue(this.getValue().multiply(BigDecimal.valueOf(0.8)));
+            if(getInspectMode()) System.out.println("Delayed order - reducing value by 20%, order re-added to PriorityQueue " + this);
+            if (!isPrepared) {
+                // zmiana priorytetu przygotowania
+                pendingOrders.remove(this);
+                pendingOrders.add(this);
+            }
+        }
     }
 
     public BigDecimal getValue() {
@@ -93,8 +115,20 @@ private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDel
         return pendingOrders;
     }
 
-    public static PriorityBlockingQueue<Map.Entry<Integer,Order>> getOrdersToDeliver() {
+    public static LinkedList<Order> getDelayQueue() {
+        return delayQueue;
+    }
+
+    public static PriorityBlockingQueue<Order> getTablesToServe() {
+        return ordersToGiveOut;
+    }
+
+    public static PriorityBlockingQueue<Order> getOrdersToDeliver() {
         return ordersToDeliver;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
     public HashMap<MenuItem, Integer> getOrderItems() {
@@ -110,12 +144,22 @@ private static final PriorityBlockingQueue<Map.Entry<Integer,Order>> ordersToDel
         sb.append(orderNumber);
         sb.append(", ordered today at ");
         sb.append(orderTime.format(DateTimeFormatter.ofPattern("HH:mm")));
-        if (isDelayed) sb.append(" ORDER DELAYED! ");
+        if (isDelayed) sb.append(" ORDER DELAYED!");
         sb.append(", value is ");
+        // kolejna linijka poprawia wyświetlanie 6.3 -> 6.30
         sb.append(new DecimalFormat("0.00").format(value));
 
         return sb.toString();
     }
 
 
+    public boolean isPrepared() {
+        return isPrepared;
+    }
+
+    public void setPrepared() {
+        isPrepared = true;
+        if (this.getClass().equals(LocalOrder.class)) ordersToGiveOut.add(this);
+        else ordersToDeliver.add(this);
+    }
 }

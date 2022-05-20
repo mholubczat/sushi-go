@@ -1,20 +1,22 @@
 package threads;
 
-import model.LocalOrder;
 import model.Order;
-import model.employee.Cook;
 
-import java.util.AbstractMap;
-import java.util.Map;
 
-import static model.Order.getOrdersToDeliver;
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.Objects;
+
+import static model.Order.getDelayQueue;
 import static model.Order.getPendingOrders;
 import static model.employee.Cook.getCooks;
-import static model.employee.Employee.getEmployees;
+import static view.DisplayMenu.getInspectMode;
 
 
 public class Kitchen extends Thread {
-    private boolean isWorking = false;
+    private static boolean isWorking = false;
+    static long speedUp = 1;
+    private LocalDateTime nextCheck;
 
     @Override
     public void run() {
@@ -28,25 +30,46 @@ public class Kitchen extends Thread {
 
     private void prepareNextOrder() throws InterruptedException {
         Order nextOrder;
-        synchronized (getPendingOrders()){
+        // czekam na zamówienia
+
             if (getPendingOrders().isEmpty()){
-                System.out.println("czekam");
+                synchronized (getPendingOrders()) {
+                    if(getInspectMode()) System.out.println("Kitchen has no more orders to process");
                     getPendingOrders().wait();
-                System.out.println("jade");
-            }}
+                    if(getInspectMode()) System.out.println("Kitchen resumed work");
+                }
+            // ogarnij opóźnione
+        } else if (nextCheck==null||nextCheck.isBefore(LocalDateTime.now())){
+                if(getInspectMode()) System.out.println("Checking for delayed orders");
+                   handleDelays();
+            }
+
         if (isWorking){
-            ///co robim?
             nextOrder = getPendingOrders().poll();
-            System.out.println(nextOrder);
+            if(getInspectMode()) System.out.println("Kitchen prepares order " + nextOrder);
             sleep(getCookSpeed());
             assert nextOrder != null;
-            //https://www.baeldung.com/java-map-entry
-            //https://stackoverflow.com/questions/20945984/is-there-blockingmap-as-blockingqueue-in-java
-            if(nextOrder.getClass().equals(LocalOrder.class)) getOrdersToDeliver().add(new AbstractMap.SimpleEntry<>(1,nextOrder));
-            else getOrdersToDeliver().add(new AbstractMap.SimpleEntry<>(2,nextOrder));
-            getOrdersToDeliver().notify();
+            nextOrder.setPrepared();
         }
         if (isWorking) prepareNextOrder();
+}
+
+public void handleDelays(){
+    LinkedList<Order> delayQueue = getDelayQueue();
+    while (delayQueue.peek() != null) {
+        if (delayQueue.peek().isPrepared()) {
+            delayQueue.poll();
+        }
+        else {
+            assert delayQueue.peek() != null;
+            if (delayQueue.peek().getOrderTime().isAfter(LocalDateTime.now().minusMinutes(15))) break;
+            if(getInspectMode()) System.out.println("Delayed order found " + delayQueue.peek());
+            Objects.requireNonNull(delayQueue.poll()).setDelayed(true);
+        }
+    }
+
+    nextCheck = LocalDateTime.now().plusMinutes(14);
+
 }
 
 public void setWorking(boolean working){
@@ -55,7 +78,15 @@ public void setWorking(boolean working){
 
 // zakładam że każdy kolejny kucharz nie zredukuje czasu przygotowania liniowo, przyjąłem t=To/n^(0,75) zgrubna estymacja
 // w grupie migają się od roboty! o głupotach gadajo
-private long getCookSpeed(){
-        return(long)(50000/Math.pow(getCooks().size(),0.75));
+private static long getCookSpeed(){
+        return(long)(50000/speedUp/Math.pow(getCooks().size(),0.75));
+        }
+
+    public static boolean isWorking() {
+        return isWorking;
+    }
+
+    public static void setSpeedUp(long l){
+        speedUp = l;
         }
 }

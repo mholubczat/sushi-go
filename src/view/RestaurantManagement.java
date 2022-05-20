@@ -3,13 +3,13 @@ package view;
 public final class RestaurantManagement extends TerminalScreen {
     private static RestaurantManagement restaurantManagement;
 
-    private RestaurantManagement(String message) {
-        super(message);
+    private RestaurantManagement() {
+        super("Choose one of the following actions:");
     }
 
     public static RestaurantManagement getRestaurantManagement() {
         if (restaurantManagement == null) {
-            restaurantManagement = new RestaurantManagement("Choose one of the following actions:");
+            restaurantManagement = new RestaurantManagement();
 
             restaurantManagement.addAction("Start restaurant work");
             restaurantManagement.addAction("Stop restaurant work");

@@ -1,7 +1,7 @@
 package model;
 
 public class OnlineOrder extends Order {
-    private Address address;
+    private final Address address;
 
     public OnlineOrder(Address address) {
         this.address = address;

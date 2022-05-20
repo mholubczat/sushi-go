@@ -3,16 +3,22 @@ package bootstrap;
 import model.Address;
 import model.LocalOrder;
 import model.OnlineOrder;
+import model.Order;
 import model.employee.Cook;
 import model.employee.Deliverer;
 import model.employee.Waiter;
 import service.MenuManagementService;
 import service.OrdersService;
 
+import java.util.Comparator;
+
+import static model.Order.getDelayQueue;
+import static view.DisplayMenu.getInspectMode;
+
 public class DataInitializer {
 
     public void initialize() {
-
+        if(getInspectMode()) System.out.println("Data initializer statred!");
         // employees: 5 cooks, 2 waiters, 2 delivery
         new Cook("Carissa", "Tillman", "908293381");
         new Cook("Rashad", "Flynn", "312668082");
@@ -29,13 +35,16 @@ public class DataInitializer {
 
         //  5-10 local orders (1-5 menu positions). Every order subtracted by 0 to 10 minutes
         for (int i = 0; i < (int) (Math.random() * 6 + 5); i++) {
-          OrdersService.randomOrder(new LocalOrder(i));
+          OrdersService.randomOrder(new LocalOrder(i), true);
         }
 
         // same for online orders (
         for (int i = 0; i < (int) (Math.random() * 6 + 5); i++) {
-            OrdersService.randomOrder(new OnlineOrder(getTestAddress()));
+            OrdersService.randomOrder(new OnlineOrder(getTestAddress()),true);
         }
+
+        getDelayQueue().sort(Comparator.comparing(Order::getOrderTime));
+        if(getInspectMode()) System.out.println("Initial employees, menu, orders loaded. Turn restaurant work on to start processing");
     }
 
     public static Address getTestAddress() {
