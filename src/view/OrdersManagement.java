@@ -13,8 +13,6 @@ public final class OrdersManagement extends TerminalScreen {
 
             ordersManagement.addAction("New order");
             ordersManagement.addAction("Pending orders");
-            ordersManagement.addAction("Orders ready to serve");
-            ordersManagement.addAction("Orders ready to deliver");
             ordersManagement.addAction("Completed orders");
             ordersManagement.addAction("Display turnover");
             ordersManagement.addAction("Back to previous menu");

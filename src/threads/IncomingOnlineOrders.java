@@ -5,7 +5,6 @@ import model.Order;
 import service.OrdersService;
 
 import static bootstrap.DataInitializer.getTestAddress;
-import static model.Order.getDelayQueue;
 import static threads.Kitchen.speedUp;
 import static view.DisplayMenu.getInspectMode;
 

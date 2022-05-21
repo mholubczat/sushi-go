@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 import static model.Menu.getCurrentMenu;
 import static model.Order.*;
-import static model.Order.getOrdersToDeliver;
 import static utils.InputValidator.*;
 
 public final class OrdersService implements IOrdersService {

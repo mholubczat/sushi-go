@@ -18,11 +18,9 @@ public final class OrdersController {
 
             case 0 -> ordersService.addOrder();
             case 1 -> ordersService.showPendingOrders();
-            case 2 -> ordersService.showServedOrders();
-            case 3 -> ordersService.showDeliveredOrders();
-            case 4 -> ordersService.showCompletedOrders();
-            case 5 -> ordersService.displayTurnover();
-            case 6 -> {
+            case 2 -> ordersService.showCompletedOrders();
+            case 3 -> ordersService.displayTurnover();
+            case 4 -> {
             }
             default ->
                     System.out.println("Please choose and option from 0 to " + (getOrdersManagement().getActions().size()-1));

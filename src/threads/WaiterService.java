@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import static model.Order.*;
 
-import static model.employee.Deliverer.getDelivererList;
 import static model.employee.Waiter.getWaiterList;
 import static threads.Kitchen.isWorking;
 import static threads.Kitchen.speedUp;
