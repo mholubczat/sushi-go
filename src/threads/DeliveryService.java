@@ -25,7 +25,6 @@ public class DeliveryService extends Thread {
     }
 
     private void startDelivery() throws InterruptedException {
-
         Order nextDelivery = getOrdersToDeliver().take();
         getDelivererList().sort(Comparator.comparing(Deliverer::getLastDeliveryTime));
         Deliverer deliverer = getDelivererList().get(0);

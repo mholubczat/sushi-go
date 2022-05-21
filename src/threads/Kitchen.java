@@ -63,12 +63,12 @@ public class Kitchen extends Thread {
                     delayQueue.poll();
                 } else {
                     assert delayQueue.peek() != null;
-                    if (delayQueue.peek().getOrderTime().isAfter(LocalDateTime.now().minusMinutes(15))) break;
+                    if (delayQueue.peek().getOrderTime().isAfter(LocalDateTime.now().minusMinutes(15/speedUp))) break;
                     if (getInspectMode()) System.out.println("Delayed order found " + delayQueue.peek());
                     Objects.requireNonNull(delayQueue.poll()).setDelayed(true);
                 }
             }
-        nextCheck = LocalDateTime.now().plusMinutes(14);
+        nextCheck = LocalDateTime.now().plusMinutes(14/speedUp);
     }
 
     public void setWorking(boolean working) {

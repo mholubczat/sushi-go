@@ -48,7 +48,7 @@ public final class MenuManagementService implements IMenuManagementService {
     public void exportMenu() {
 
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream("./output/" + getString("Enter file name") + ".csv");
+            FileOutputStream fileOutputStream = new FileOutputStream("./resources/output/" + getString("Enter file name") + ".csv");
 // CSV column names
             fileOutputStream.write("Product".getBytes(StandardCharsets.UTF_8));
             fileOutputStream.write(59); // ';'  separator
@@ -75,7 +75,7 @@ public final class MenuManagementService implements IMenuManagementService {
     @Override
     public void importMenu() {
         try {
-            FileReader fr = new FileReader("./input/" + getString("Enter file name") + ".csv");
+            FileReader fr = new FileReader("./resources/input/" + getString("Enter file name") + ".csv");
             readCsv(fr);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -84,7 +84,7 @@ public final class MenuManagementService implements IMenuManagementService {
 
     public void importMenu(String fileName) {
         try {
-            FileReader fr = new FileReader("./input/" + fileName + ".csv");
+            FileReader fr = new FileReader("./resources/input/" + fileName + ".csv");
             readCsv(fr);
         } catch (IOException e) {
             throw new RuntimeException(e);

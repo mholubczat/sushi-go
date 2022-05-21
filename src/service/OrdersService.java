@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import static model.Menu.getCurrentMenu;
 import static model.Order.*;
+import static model.Order.getOrdersToDeliver;
 import static utils.InputValidator.*;
 
 public final class OrdersService implements IOrdersService {
@@ -47,7 +48,7 @@ public final class OrdersService implements IOrdersService {
         for (int i = 0; i < (int) (Math.random() * 5 + 1); i++) {
             order.addOrderItem(getCurrentMenu().get((int) (Math.random() * getCurrentMenu().size())), ((int) (Math.random() * 2) + 1));
         }
-        if(initial) order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 30)));
+        if (initial) order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 30)));
         getDelayQueue().add(order);
         synchronized (getPendingOrders()) {
             getPendingOrders().add(order);
@@ -57,37 +58,45 @@ public final class OrdersService implements IOrdersService {
     }
 
 
-
     @Override
     public void showPendingOrders() {
-        System.out.println("Orders waiting to be prepared");
-        getPendingOrders().forEach(System.out::println);
-        boolean details = getBoolean("Show order details? Y/N");
-        if (details) orderDetails(getPendingOrders());
+
+        if (getPendingOrders() == null || getPendingOrders().size() == 0) System.out.println("No orders found");
+        else {
+            System.out.println("Orders waiting to be prepared");
+            getPendingOrders().forEach(System.out::println);
+            if (getBoolean("Show order details? Y/N")) orderDetails(getPendingOrders());
+        }
     }
 
     @Override
     public void showServedOrders() {
         System.out.println("Orders waiting to be served");
-        getTablesToServe().forEach(System.out::println);
-        boolean details = getBoolean("Show order details? Y/N");
-        if (details) orderDetails(getTablesToServe());
+        if (getTablesToServe() == null || getOrdersToDeliver().size() == 0) System.out.println("No orders found");
+        else {
+            getTablesToServe().forEach(System.out::println);
+            if (getBoolean("Show order details? Y/N")) orderDetails(getTablesToServe());
+        }
     }
 
     @Override
     public void showDeliveredOrders() {
         System.out.println("Orders waiting to be delivered");
-        getOrdersToDeliver().forEach(System.out::println);
-        boolean details = getBoolean("Show order details? Y/N");
-        if (details) orderDetails(getOrdersToDeliver());
+        if (getOrdersToDeliver() == null || getOrdersToDeliver().size() == 0) System.out.println("No orders found");
+        else {
+            getOrdersToDeliver().forEach(System.out::println);
+            if (getBoolean("Show order details? Y/N")) orderDetails(getOrdersToDeliver());
+        }
     }
 
     @Override
     public void showCompletedOrders() {
         LocalDate date = getLocalDate("Please enter a date in yyyy-mm-dd format");
-        getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date)).forEach(System.out::println);
-        boolean details = getBoolean("Show order details? Y/N");
-        if (details) orderDetails(date);
+        if (getFinishedOrders() == null || getFinishedOrders().size() == 0) System.out.println("No orders found");
+        else {
+            getFinishedOrders().stream().filter(order -> order.getOrderTime().toLocalDate().equals(date)).forEach(System.out::println);
+            if (getBoolean("Show order details? Y/N")) orderDetails(date);
+        }
     }
 
     @Override
@@ -101,16 +110,21 @@ public final class OrdersService implements IOrdersService {
 
     public void orderDetails(LocalDate date) {
         int orderToDisplay = getInt("Select order to display");
+        if (orderToDisplay >= getFinishedOrders().size())
+            orderToDisplay = getInt("Enter number from 0 to " + getFinishedOrders().size());
+        int finalOrderToDisplay = orderToDisplay;
         List<Order> order = getFinishedOrders().stream().filter(o -> o.getOrderTime().toLocalDate().equals(date))
-                .filter(o -> o.getOrderNumber() == orderToDisplay).toList();
+                .filter(o -> o.getOrderNumber() == finalOrderToDisplay).toList();
         displayOrderList(order);
     }
 
+
+
     private void displayOrderList(List<Order> order) {
-        if(order.get(0)!=null) {
+        if (order.get(0) != null) {
             System.out.println(order.get(0));
-            for (MenuItem mi: order.get(0).getOrderItems().keySet()) {
-                System.out.printf("%-4s%-3s%-22s%-6s%-5s%n", "[" + getCurrentMenu().indexOf(mi) + "]"," -", mi.getName(), getPriceFormat().format(mi.getPrice()),"zł" + " quantity " + order.get(0).getOrderItems().get(mi));
+            for (MenuItem mi : order.get(0).getOrderItems().keySet()) {
+                System.out.printf("%-4s%-3s%-22s%-6s%-5s%n", "[" + getCurrentMenu().indexOf(mi) + "]", " -", mi.getName(), getPriceFormat().format(mi.getPrice()), "zł" + " quantity " + order.get(0).getOrderItems().get(mi));
             }
         }
     }
