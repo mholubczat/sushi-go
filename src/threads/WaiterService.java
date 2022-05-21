@@ -34,13 +34,14 @@ public class WaiterService extends Thread {
         synchronized(waiter){
             waiter.getExecutor().submit(
                     () -> {
-                        if (getInspectMode()) System.out.println(waiter + " serves " + nextTable);
+                        if (getInspectMode()) System.out.println(waiter + " ---- SERVES ---- " + nextTable);
                         try {
                             Thread.sleep(120000/speedUp);
                             waiter.completeOrder(nextTable);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
+                        if (getInspectMode()) System.out.println(waiter + " ---- FINISHED ---- " + nextTable);
                     }
             );
         }

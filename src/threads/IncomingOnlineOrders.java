@@ -22,9 +22,8 @@ public class IncomingOnlineOrders extends Thread {
         try {
 
             Thread.sleep((long) (Math.random() * 10000/speedUp + 15000/speedUp));
-            synchronized(getDelayQueue()){
             Order order = OrdersService.randomOrder(new OnlineOrder(getTestAddress()),false);
-            if (getInspectMode()) System.out.println("Random online order received! " + order);}
+            if (getInspectMode()) System.out.println("Random online order received! " + order);
             if (isOnlineWorking) receiveOrders();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

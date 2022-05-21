@@ -47,7 +47,7 @@ public final class OrdersService implements IOrdersService {
         for (int i = 0; i < (int) (Math.random() * 5 + 1); i++) {
             order.addOrderItem(getCurrentMenu().get((int) (Math.random() * getCurrentMenu().size())), ((int) (Math.random() * 2) + 1));
         }
-        if(initial) order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 20)));
+        if(initial) order.setOrderTime(LocalDateTime.now().minusMinutes((long) (Math.random() * 30)));
         getDelayQueue().add(order);
         synchronized (getPendingOrders()) {
             getPendingOrders().add(order);

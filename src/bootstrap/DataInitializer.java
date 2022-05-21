@@ -33,7 +33,7 @@ public class DataInitializer {
         // menu - imported from csv (input folder)
         new MenuManagementService().importMenu("BootstrapMenu");
 
-        //  5-10 local orders (1-5 menu positions). Every order subtracted by 0 to 10 minutes
+        //  5-10 local orders (1-5 menu positions). Every order subtracted by 0 to 30 minutes
         for (int i = 0; i < (int) (Math.random() * 6 + 5); i++) {
           OrdersService.randomOrder(new LocalOrder(i), true);
         }

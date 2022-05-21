@@ -27,21 +27,20 @@ public class DeliveryService extends Thread {
     private void startDelivery() throws InterruptedException {
 
         Order nextDelivery = getOrdersToDeliver().take();
-        System.out.println(nextDelivery);
         getDelivererList().sort(Comparator.comparing(Deliverer::getLastDeliveryTime));
         Deliverer deliverer = getDelivererList().get(0);
         deliverer.setLastDeliveryTime(LocalDateTime.now());
         synchronized (deliverer) {
             deliverer.getExecutor().submit(
                     () -> {
-                        if (getInspectMode()) System.out.println(deliverer + " delivers " + nextDelivery);
+                        if (getInspectMode()) System.out.println(deliverer + " ---- DELIVERS ---- " + nextDelivery);
                         try {
                             Thread.sleep(120000 / speedUp);
                             deliverer.completeOrder(nextDelivery);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
-                        if (getInspectMode()) System.out.println(deliverer + " finished delivery of " + nextDelivery);
+                        if (getInspectMode()) System.out.println(deliverer + " ---- FINISHED ---- " + nextDelivery);
                     }
             );
         }
