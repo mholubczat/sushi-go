@@ -3,6 +3,7 @@ package threads;
 import model.Order;
 import model.employee.Deliverer;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 
 import static model.Order.getOrdersToDeliver;
@@ -24,14 +25,14 @@ public class DeliveryService extends Thread {
     }
 
     private void startDelivery() throws InterruptedException {
+
         Order nextDelivery = getOrdersToDeliver().take();
-        if (getInspectMode()) System.out.println(nextDelivery + " will be delivered");
+        System.out.println(nextDelivery);
         getDelivererList().sort(Comparator.comparing(Deliverer::getLastDeliveryTime));
         Deliverer deliverer = getDelivererList().get(0);
+        deliverer.setLastDeliveryTime(LocalDateTime.now());
         synchronized (deliverer) {
-
             deliverer.getExecutor().submit(
-
                     () -> {
                         if (getInspectMode()) System.out.println(deliverer + " delivers " + nextDelivery);
                         try {

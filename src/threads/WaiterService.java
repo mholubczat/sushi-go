@@ -3,9 +3,11 @@ package threads;
 import model.Order;
 import model.employee.Waiter;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import static model.Order.*;
 
+import static model.employee.Deliverer.getDelivererList;
 import static model.employee.Waiter.getWaiterList;
 import static threads.Kitchen.isWorking;
 import static threads.Kitchen.speedUp;
@@ -28,9 +30,9 @@ public class WaiterService extends Thread {
         Order nextTable = getTablesToServe().take();
         getWaiterList().sort(Comparator.comparing(Waiter::getLastTableTime));
         Waiter waiter = getWaiterList().get(0);
-       synchronized(waiter){
+        waiter.setLastTableTime(LocalDateTime.now());
+        synchronized(waiter){
             waiter.getExecutor().submit(
-
                     () -> {
                         if (getInspectMode()) System.out.println(waiter + " serves " + nextTable);
                         try {
