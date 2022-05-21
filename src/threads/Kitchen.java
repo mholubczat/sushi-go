@@ -22,7 +22,6 @@ public class Kitchen extends Thread {
     public void run() {
         super.run();
         try {
-            handleDelays();
             prepareNextOrder();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -43,7 +42,7 @@ public class Kitchen extends Thread {
             } else if (nextCheck == null || nextCheck.isBefore(LocalDateTime.now())) {
                 if (getInspectMode()) System.out.println("Checking for delayed orders");
                 handleDelays();
-                nextCheck = LocalDateTime.now().plusMinutes(14);
+
             }
 
             if (isWorking) {
@@ -58,7 +57,6 @@ public class Kitchen extends Thread {
     }
 
     public void handleDelays() {
-        synchronized (getDelayQueue()) {
             LinkedList<Order> delayQueue = getDelayQueue();
             while (delayQueue.peek() != null) {
                 if (delayQueue.peek().isPrepared()) {
@@ -70,7 +68,7 @@ public class Kitchen extends Thread {
                     Objects.requireNonNull(delayQueue.poll()).setDelayed(true);
                 }
             }
-        }
+        nextCheck = LocalDateTime.now().plusMinutes(14);
     }
 
     public void setWorking(boolean working) {

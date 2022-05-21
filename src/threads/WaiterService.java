@@ -34,7 +34,7 @@ public class WaiterService extends Thread {
                     () -> {
                         if (getInspectMode()) System.out.println(waiter + " serves " + nextTable);
                         try {
-                            Thread.sleep(120000/speedUp/speedUp);
+                            Thread.sleep(120000/speedUp);
                             waiter.completeOrder(nextTable);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);

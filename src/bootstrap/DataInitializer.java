@@ -3,12 +3,16 @@ package bootstrap;
 import model.Address;
 import model.LocalOrder;
 import model.OnlineOrder;
+import model.Order;
 import model.employee.Cook;
 import model.employee.Deliverer;
 import model.employee.Waiter;
 import service.MenuManagementService;
 import service.OrdersService;
 
+import java.util.Comparator;
+
+import static model.Order.getDelayQueue;
 import static view.DisplayMenu.getInspectMode;
 
 public class DataInitializer {
@@ -38,6 +42,7 @@ public class DataInitializer {
         for (int i = 0; i < (int) (Math.random() * 6 + 5); i++) {
             OrdersService.randomOrder(new OnlineOrder(getTestAddress()),true);
         }
+        getDelayQueue().sort(Comparator.comparing(Order::getOrderTime));
         System.out.println();System.out.println();
 
 System.out.println("  >=>>=>                                          >===>                     >======>                         >=>                                                        >=>   ");
