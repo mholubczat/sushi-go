@@ -12,7 +12,7 @@ Program is opeated through CLI commands.
 
 ## Features
 * Restaurant simulated by threads, representing orders preparation, receiving online orders, orders delivery and reception.
-* Includes single thread executors working on priority blocking queue
+* Includes single thread executors working on priority blocking queues
 * Restaurant menu import/export from file
 
 ## Status
